@@ -9,6 +9,8 @@ export const BYTES:number = 20;
 
 /**  A class representation of the SHA1 algorithm. */
 export class SHA1 {
+  readonly hashSize: number = BYTES;
+
   private _buf: Uint8Array;
   private _bufIdx: number;
   private _count: Uint32Array;
@@ -34,11 +36,6 @@ export class SHA1 {
       return b ^ c ^ d;
     }
   };
-
-  /** Generates a SHA1 hash of the input data. */
-  static hash(msg?:string |Uint8Array): Uint8Array {
-    return new SHA1().digest(msg);
-  }
 
   /** Initializes a hash instance. */
   init(): SHA1 {
@@ -148,4 +145,9 @@ export class SHA1 {
     h[3] = (h[3] + d) | 0;
     h[4] = (h[4] + e) | 0;
   }
+}
+
+/** Generates a SHA1 hash of the input data. */
+export function sha1(msg?:string | Uint8Array): Uint8Array {
+  return new SHA1().digest(msg);
 }

@@ -1,6 +1,6 @@
 import { test, runIfMain } from "https://deno.land/x/testing/mod.ts";
 import { assertEquals } from "https://deno.land/x/testing/asserts.ts";
-import { SHA1 } from "./mod.ts";
+import { sha1 } from "./mod.ts";
 
 interface TestVector {
   msg: Uint8Array;
@@ -35,7 +35,7 @@ testVectors.forEach(({ msg, msg_bit_len, hash }: TestVector) => {
   test({
     name: `SHA1 ${msg_bit_len ? msg_bit_len / 8 : 0}-byte msg`,
     fn(): void {
-      assertEquals(SHA1.hash(msg), hash);
+      assertEquals(sha1(msg), hash);
     }
   });
 });
