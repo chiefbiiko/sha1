@@ -22,15 +22,15 @@ Creates a new SHA1 instance.
 
 Initializes a hash instance.
 
-#### `SHA1#update(msg?: string | Uint8Array): SHA1`
+#### `SHA1#update(msg?: string | Uint8Array, inputEncoding: string = "utf8"): SHA1`
 
-Updates a hash with additional data.
+Updates a hash with additional data. `inputEncoding` can be one of `"utf8"`, `"hex"`, or `"base64"`.
 
-#### `SHA1#digest(msg?: string | Uint8Array): Uint8Array`
+#### `SHA1#digest(outputEncoding?: string): string | Uint8Array`
 
-Finalizes the hash, optionally with additional message data.
+Obtain a digest of all the fed-in messages. `outputEncoding` can be one of `"utf8"`, `"hex"`, or `"base64"`. If it is omitted a `Uint8Array` gets returned.
 
-#### `sha1(msg: string | Uint8Array): Uint8Array`
+#### `sha1(msg?:string | Uint8Array, outputEncoding?: string): string | Uint8Array`
 
 Convenience function for hashing singular data.
 

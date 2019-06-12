@@ -1,4 +1,4 @@
-const encoder : TextEncoder = new TextEncoder()
+import { encode, decode } from "https://denopkg.com/chiefbiiko/std-encoding/mod.ts";
 
 function rotl(x: number, n: number): number {
   return (x << n) | (x >>> 32 - n);
@@ -43,20 +43,22 @@ export class SHA1 {
     this._H = new Uint32Array([
       0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0
     ]);
+    
     this._bufIdx = 0;
     this._count = new Uint32Array(2);
-    // Util.clear(this._buf);
     this._buf.fill(0)
+    
     return this;
   }
 
   /** Updates a hash with additional message data. */
-  update(msg?: string | Uint8Array): SHA1 {
+  update(msg?: string | Uint8Array, inputEncoding: string = "utf8"): SHA1 {
     if (!msg) {
       msg = new Uint8Array(0)
     } else if (typeof msg === "string") {
-      msg = encoder.encode(msg) as Uint8Array;
+      msg = encode(msg, inputEncoding) as Uint8Array;
     }
+    
     // process the msg as many times as possible, the rest is stored in the buffer
     // message is processed in 512 bit (64 byte chunks)
     for (let i: number = 0; i < msg.length; i++) {
@@ -66,23 +68,27 @@ export class SHA1 {
         this._bufIdx = 0;
       }
     }
+    
     // counter update (number of message bits)
     const c: Uint32Array = this._count;
+    
     if ((c[0] += (msg.length << 3)) < (msg.length << 3)) {
       c[1]++;
     }
+    
     c[1] += (msg.length >>> 29);
+    
     return this;
   }
 
 
   /** Finalizes a hash with additional message data. */
-  digest(msg?: string | Uint8Array): Uint8Array {
-    this.update(msg);
+  digest(outputEncoding?: string): string | Uint8Array {
     // append '1'
     const b: Uint8Array = this._buf
     let idx: number = this._bufIdx;
     b[idx++] = 0x80;
+    
     // zeropad up to byte pos 56
     while (idx !== 56) {
       if (idx === 64) {
@@ -91,8 +97,10 @@ export class SHA1 {
       }
       b[idx++] = 0;
     }
+    
     // append length in bits
     const c: Uint32Array = this._count;
+    
     b[56] = (c[1] >>> 24) & 0xff;
     b[57] = (c[1] >>> 16) & 0xff;
     b[58] = (c[1] >>>  8) & 0xff;
@@ -101,18 +109,23 @@ export class SHA1 {
     b[61] = (c[0] >>> 16) & 0xff;
     b[62] = (c[0] >>>  8) & 0xff;
     b[63] = (c[0] >>>  0) & 0xff;
+    
     this.transform();
+    
     // return the hash as byte array (20 bytes)
     const hash: Uint8Array = new Uint8Array(BYTES);
+    
     for (let i: number = 0; i < 5; i++) {
       hash[(i << 2) + 0] = (this._H[i] >>> 24) & 0xff;
       hash[(i << 2) + 1] = (this._H[i] >>> 16) & 0xff;
       hash[(i << 2) + 2] = (this._H[i] >>>  8) & 0xff;
       hash[(i << 2) + 3] = (this._H[i] >>>  0) & 0xff;
     }
+    
     // clear internal states and prepare for new hash
     this.init();
-    return hash;
+    
+    return outputEncoding ? decode(hash, outputEncoding) : hash;
   }
 
   /** Performs one transformation cycle. */
@@ -123,22 +136,28 @@ export class SHA1 {
     let  c: number = h[2];
     let d:number = h[3];
     let e: number = h[4];
+    
     // convert byte buffer to words
     const w: Uint32Array = new Uint32Array(80);
+    
     for (let i: number = 0; i < 16; i++) {
       w[i] = (this._buf[(i << 2) + 3]) | (this._buf[(i << 2) + 2] << 8) | (this._buf[(i << 2) + 1] << 16) | (this._buf[i << 2] << 24);
     }
+    
     for (let t: number = 0; t < 80; t++) {
       if (t >= 16) {
         w[t] = rotl(w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16], 1);
       }
+      
       const tmp: number = (rotl(a, 5) + SHA1.F(t, b, c, d) + e + w[t] + this._K[Math.floor(t / 20)]) | 0;
+      
       e = d;
       d = c;
       c = rotl(b, 30)
       b = a;
       a = tmp;
     }
+    
     h[0] = (h[0] + a) | 0;
     h[1] = (h[1] + b) | 0;
     h[2] = (h[2] + c) | 0;
@@ -148,6 +167,6 @@ export class SHA1 {
 }
 
 /** Generates a SHA1 hash of the input data. */
-export function sha1(msg?:string | Uint8Array): Uint8Array {
-  return new SHA1().digest(msg);
+export function sha1(msg?:string | Uint8Array, outputEncoding?: string): string | Uint8Array {
+  return new SHA1().update(msg).digest(outputEncoding);
 }
