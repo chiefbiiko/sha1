@@ -4,6 +4,8 @@
 
 SHA1 for [`deno`](https://deno.land).
 
+:warning: **SHA1 is not recommended anymore. Do not use it for any new applications/codebases.**
+
 ## Usage
 
 ``` ts
