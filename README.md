@@ -24,7 +24,7 @@ Creates a new SHA1 instance.
 
 Initializes a hash instance.
 
-#### `SHA1#update(msg?: string | Uint8Array, inputEncoding: string = "utf8"): SHA1`
+#### `SHA1#update(msg?: string | Uint8Array, inputEncoding?: string): SHA1`
 
 Updates a hash with additional data. `inputEncoding` can be one of `"utf8"`, `"hex"`, or `"base64"`.
 
@@ -32,7 +32,7 @@ Updates a hash with additional data. `inputEncoding` can be one of `"utf8"`, `"h
 
 Obtain a digest of all the fed-in messages. `outputEncoding` can be one of `"utf8"`, `"hex"`, or `"base64"`. If it is omitted a `Uint8Array` gets returned.
 
-#### `sha1(msg?:string | Uint8Array, outputEncoding?: string): string | Uint8Array`
+#### `sha1(msg?:string | Uint8Array, inputEncoding?: string, outputEncoding?: string): string | Uint8Array`
 
 Convenience function for hashing singular data.
 

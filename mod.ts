@@ -55,7 +55,7 @@ export class SHA1 {
   }
 
   /** Updates a hash with additional message data. */
-  update(msg?: string | Uint8Array, inputEncoding: string = "utf8"): SHA1 {
+  update(msg?: string | Uint8Array, inputEncoding?: string): SHA1 {
     if (!msg) {
       msg = new Uint8Array(0);
     } else if (typeof msg === "string") {
@@ -181,7 +181,8 @@ export class SHA1 {
 /** Generates a SHA1 hash of the input data. */
 export function sha1(
   msg?: string | Uint8Array,
+  inputEncoding?: string,
   outputEncoding?: string
 ): string | Uint8Array {
-  return new SHA1().update(msg).digest(outputEncoding);
+  return new SHA1().update(msg, inputEncoding).digest(outputEncoding);
 }
