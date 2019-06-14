@@ -55,9 +55,9 @@ export class SHA1 {
   }
 
   /** Updates a hash with additional message data. */
-  update(msg?: string | Uint8Array, inputEncoding?: string): SHA1 {
+  update(msg: string | Uint8Array, inputEncoding?: string): SHA1 {
     if (!msg) {
-      msg = new Uint8Array(0);
+      throw new TypeError("msg must be a string or Uint8Array.")
     } else if (typeof msg === "string") {
       msg = encode(msg, inputEncoding) as Uint8Array;
     }
