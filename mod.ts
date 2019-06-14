@@ -19,7 +19,7 @@ export class SHA1 {
   private _count: Uint32Array;
   private _K: Uint32Array = new Uint32Array([0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6]);
   private _H: Uint32Array;
-  private _finalized: boolean = false;
+  private _finalized: boolean;
   
   /** Creates a SHA1 instance. */
   constructor() {
