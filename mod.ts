@@ -186,7 +186,7 @@ export class SHA1 {
 
 /** Generates a SHA1 hash of the input data. */
 export function sha1(
-  msg?: string | Uint8Array,
+  msg: string | Uint8Array,
   inputEncoding?: string,
   outputEncoding?: string
 ): string | Uint8Array {
