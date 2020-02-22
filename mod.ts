@@ -15,12 +15,12 @@ export class SHA1 {
   readonly hashSize: number = BYTES;
 
   private _buf: Uint8Array = new Uint8Array(64);
-  private _bufIdx: number;
-  private _count: Uint32Array;
+  private _bufIdx!: number;
+  private _count!: Uint32Array;
   private _K: Uint32Array = new Uint32Array([0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6]);
-  private _H: Uint32Array;
-  private _finalized: boolean;
-  
+  private _H!: Uint32Array;
+  private _finalized!: boolean;
+
   /** Creates a SHA1 instance. */
   constructor() {
     this.init();
@@ -34,7 +34,7 @@ export class SHA1 {
       return b ^ c ^ d;
     } else if (t <= 59) {
       return (b & c) | (b & d) | (c & d);
-    } else if (t <= 79) {
+    } else {
       return b ^ c ^ d;
     }
   }
@@ -89,9 +89,9 @@ export class SHA1 {
     if (this._finalized) {
       throw new Error("digest has already been called.")
     }
-    
+
     this._finalized = true;
-    
+
     // append '1'
     const b: Uint8Array = this._buf;
     let idx: number = this._bufIdx;
