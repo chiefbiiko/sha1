@@ -1,7 +1,4 @@
-import {
-  encode,
-  decode
-} from "https://denopkg.com/chiefbiiko/std-encoding/mod.ts";
+import { encode, decode } from "./deps.ts";
 
 function rotl(x: number, n: number): number {
   return (x << n) | (x >>> (32 - n));
